@@ -4,7 +4,7 @@
     "Routine.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",//默认地址
+      "launchUrl": "api/companies", //默认地址
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
