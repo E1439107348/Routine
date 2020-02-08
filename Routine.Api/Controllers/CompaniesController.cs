@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Routine.Api.Entities;
+using Routine.Api.EntitiesDto;
 using Routine.Api.Services;
 using System;
 using System.Collections.Generic;
@@ -17,24 +20,52 @@ namespace Routine.Api.Controllers
     {
 
         public readonly ICompanyRepository _companyRepository;
-        public CompaniesController(ICompanyRepository companyRepository)
+        private readonly IMapper _mapper;//对象映射器
+        public CompaniesController(ICompanyRepository companyRepository, IMapper mapper)
         {
             _companyRepository = companyRepository ??
                 throw new ArgumentNullException(nameof(companyRepository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies()
+        //public async Task<IActionResult> GetCompanies()
+        //Task<IActionResult<CompanyDto>>
+        //这样写更能明确【返回类区、属性】    
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies()
         {
+            //Entity Model
             var companies = await _companyRepository.GetCompaniesAsync();
             //404 NoFound();
-            return Ok(companies);
+
+
+            //返回viewModel 
+            #region  //属性较少可以使用此方法。最好使用对象映射器   [AutoMapper]
+            //nuget中安装 AutoMapper.Extensions.Microsoft.DependencyInjection而不是AutoMapper ，因为前者是后者的拓展。 和asp.netCore中di体系更好的结合
+            //安装之后需要在 Startup.cs 的ConfigureServices中注册
+            // var companiesDtos = new List<CompanyDto>();
+            //foreach (var item in companies)
+            //{
+            //    companiesDtos.Add(new CompanyDto
+            //    {
+            //        Id = item.Id,
+            //        CompanyName = item.Name
+            //    }); ;
+            //} 
+
+
+            //2对应映射器
+            var companiesDtos = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+            var companiesDtosTs = _mapper.Map<IEnumerable<Company>>(companiesDtos);
+            #endregion
+            return Ok(companiesDtos);
         }
 
 
         [HttpGet("{companyId}")]//api/Companies/companyId=>api/Companies/123
-        public async Task<IActionResult> GetCompanY(Guid companyId)
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanY(Guid companyId)
         {
             //var exist= await _companyRepository.CompanyExistsAsync(companyId);
             //if (!exist)
@@ -46,8 +77,10 @@ namespace Routine.Api.Controllers
             {
                 return NotFound();
             }
+
+            var companiesDtos = _mapper.Map<IEnumerable<CompanyDto>>(company);
             //404 NoFound();
-            return Ok(company);
+            return Ok(companiesDtos);
         }
 
     }

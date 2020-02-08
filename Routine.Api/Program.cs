@@ -46,8 +46,11 @@ namespace Routine.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            //组件配置
+                 //此处启用kestrel
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                   
                     webBuilder.UseStartup<Startup>();
                 });
     }
