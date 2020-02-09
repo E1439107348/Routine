@@ -4,10 +4,10 @@ using System;
 
 namespace Routine.Api.Data
 {
-    public class RoutineDbContext:DbContext
+    public class RoutineDbContext : DbContext
     {
-        public RoutineDbContext(DbContextOptions<RoutineDbContext> options) 
-            : base(options) 
+        public RoutineDbContext(DbContextOptions<RoutineDbContext> options)
+            : base(options)
         {
 
         }
@@ -46,20 +46,55 @@ namespace Routine.Api.Data
 
             modelBuilder.Entity<Company>().HasData(new Company
             {
-                Id = Guid.NewGuid(),
-                Name="Microsoft",
-                Introduction="Great Company"
+                Id = Guid.Parse("7D5C3017-D326-42E0-BAC6-CDCC344FB45E"),
+                Name = "Microsoft",
+                Introduction = "Great Company"
             }, new Company
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("85AB45A6-F92F-4188-A767-09DFB1D23C64"),
                 Name = "Google",
                 Introduction = "Don't bt evil"
             }, new Company
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("0415E462-208B-4F78-8EE1-C8BE2690CF77"),
                 Name = "Alipapa",
                 Introduction = "Fubao Company"
-            }) ;
+            });
+
+
+
+            modelBuilder.Entity<Employee>().HasData(
+                new Employee
+                {
+                    Id = Guid.Parse("2CDCE0ED-2391-4159-A22F-35018000EDE7"),
+                    CompanyId = Guid.Parse("7D5C3017-D326-42E0-BAC6-CDCC344FB45E"),
+                    DateOfBirth = new DateTime(1976, 1, 2),
+                    EmployeeNo = "MSFT231",
+                    FirstName = "Nick",
+                    LastName = "Carter",
+                    Gender = Gender.男
+                },
+                  new Employee
+                  {
+                      Id = Guid.Parse("7A4CB816-3FED-4FC3-88FF-F6342666D8FD"),
+                      CompanyId = Guid.Parse("85AB45A6-F92F-4188-A767-09DFB1D23C64"),
+                      DateOfBirth = new DateTime(1996, 1, 2),
+                      EmployeeNo = "MSFT232",
+                      FirstName = "NSick",
+                      LastName = "CSarter",
+                      Gender = Gender.女
+                  },
+                    new Employee
+                    {
+                        Id = Guid.Parse("B5DD6783-CCB3-42B1-9F43-9678A6FD8C0E"),
+                        CompanyId = Guid.Parse("0415E462-208B-4F78-8EE1-C8BE2690CF77"),
+                        DateOfBirth = new DateTime(2000, 1, 2),
+                        EmployeeNo = "MSFTQ",
+                        FirstName = "QNick",
+                        LastName = "QCarter",
+                        Gender = Gender.男
+                    }
+                );
 
         }
     }
