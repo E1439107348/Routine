@@ -58,10 +58,13 @@ namespace Routine.Api.Services
             }
 
             company.Id = Guid.NewGuid();
-            foreach (var item in company.Employees)
+            if (company.Employees!=null)
             {
-                item.Id = Guid.NewGuid();
-            }
+                foreach (var item in company.Employees)
+                {
+                    item.Id = Guid.NewGuid();
+                }
+            } 
 
             _context.Companyies.Add(company);
         }

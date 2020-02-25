@@ -29,6 +29,9 @@ namespace Routine.Api.ProFiles
               opt => opt.MapFrom(src => src.CompanyName)
               );
 
+            //从CompanyAddDto映射到Company
+            CreateMap<CompanyAddDto, Company>();
+
         }
     }
 }

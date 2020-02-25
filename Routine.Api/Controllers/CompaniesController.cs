@@ -64,8 +64,8 @@ namespace Routine.Api.Controllers
         }
 
 
-        [HttpGet("{companyId}")]//api/Companies/companyId=>api/Companies/123
-        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanY(Guid companyId)
+        [HttpGet("{companyId}",Name =nameof(GetCompany))]//api/Companies/companyId=>api/Companies/123
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(Guid companyId)
         {
             //var exist= await _companyRepository.CompanyExistsAsync(companyId);
             //if (!exist)
@@ -83,5 +83,22 @@ namespace Routine.Api.Controllers
             return Ok(companiesDtos);
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult<CompanyAddDto>> CreateCompany(CompanyAddDto company)
+        {
+            if (company==null)
+            {
+                return BadRequest(); //返回400错误
+            }
+
+            var entity = _mapper.Map<Company>(company);
+            _companyRepository.AddCompany(entity);
+            await _companyRepository.SaveAsync();
+            var returndto = _mapper.Map<CompanyDto>(entity);
+
+            return CreatedAtRoute(nameof(GetCompany),new { companyId=entity.Id}, returndto);
+
+        }
     }
 }

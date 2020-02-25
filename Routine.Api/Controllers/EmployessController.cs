@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Routine.Api.Entities;
 using Routine.Api.EntitiesDto;
 using Routine.Api.Services;
 using System;
@@ -23,7 +24,7 @@ namespace Routine.Api.Controllers
         }
 
         [HttpGet]
-        [Route("GetOfId")]
+       // [Route("GetOfId")]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeesForCompany(Guid companyId)
         {
             //没有找到
@@ -40,7 +41,8 @@ namespace Routine.Api.Controllers
 
 
         [HttpGet]
-        [Route("GetOfId/{employeesId}")]
+        //[Route("GetOfId/{employeesId}",Name =nameof(GetEmployeeForCompany))]
+        [Route("{employeesId}", Name = nameof(GetEmployeeForCompany))]
         public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeeForCompany(Guid companyId, Guid employeesId)
         {
             //没有找到
@@ -54,6 +56,30 @@ namespace Routine.Api.Controllers
             return Ok(employeesDto);
 
         }
+
+        [HttpPost]
+        public async Task<ActionResult<EmployeeDto>> CreateEmployeeForCompany(Guid companyId, EmployeeAddDto employee)
+        {
+            try
+            {
+                if (!await _companyRepository.CompanyExistsAsync(companyId))
+                {
+                    return NotFound();
+                }
+                var entity = _mapper.Map<Employee>(employee);
+                _companyRepository.AddEmployee(companyId, entity);
+                await _companyRepository.SaveAsync();
+
+                var dtoReturn = _mapper.Map<EmployeeDto>(entity);
+                return CreatedAtRoute(nameof(GetEmployeeForCompany), new { companyId = companyId, employeeId = dtoReturn.Id }, dtoReturn);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
 
     }
 
