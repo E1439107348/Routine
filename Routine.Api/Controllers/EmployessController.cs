@@ -25,15 +25,15 @@ namespace Routine.Api.Controllers
 
         [HttpGet]
        // [Route("GetOfId")]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeesForCompany(Guid companyId)
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeesForCompany(Guid companyId,[FromQuery]string genderDisplay)
         {
             //没有找到
             if (!await _companyRepository.CompanyExistsAsync(companyId))
             {
-                return Ok("222");
+                return NotFound();
             }
 
-            var employees = await _companyRepository.GetEmployeesAsync(companyId);
+            var employees = await _companyRepository.GetEmployeesAsync(companyId, genderDisplay);
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             return Ok(employeesDto);
 
@@ -43,7 +43,7 @@ namespace Routine.Api.Controllers
         [HttpGet]
         //[Route("GetOfId/{employeesId}",Name =nameof(GetEmployeeForCompany))]
         [Route("{employeesId}", Name = nameof(GetEmployeeForCompany))]
-        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeeForCompany(Guid companyId, Guid employeesId)
+        public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetEmployeeForCompany(Guid companyId, Guid employeesId, [FromQuery]string genderDisplay)
         {
             //没有找到
             if (!await _companyRepository.CompanyExistsAsync(companyId))
@@ -51,7 +51,7 @@ namespace Routine.Api.Controllers
                 return NotFound();
             }
 
-            var employees = await _companyRepository.GetEmployeesAsync(companyId);
+            var employees = await _companyRepository.GetEmployeesAsync(companyId, genderDisplay);
             var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
             return Ok(employeesDto);
 

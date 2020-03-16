@@ -44,7 +44,7 @@ namespace Routine.Api
 
             services.AddScoped<ICompanyRepository, CompanyRepository>();//每次http请求都执行一次
 
-
+            //使用数据库 sqllite
             services.AddDbContext<RoutineDbContext>(option => 
             {
                 option.UseSqlite("Data Source=routine.db");

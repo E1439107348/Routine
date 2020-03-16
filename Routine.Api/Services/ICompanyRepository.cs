@@ -1,4 +1,5 @@
-﻿using Routine.Api.Entities;
+﻿using Routine.Api.DtoParameters;
+using Routine.Api.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace Routine.Api.Services
 {
     public interface ICompanyRepository
     {
-        Task<IEnumerable<Company>> GetCompaniesAsync();
+        Task<IEnumerable<Company>> GetCompaniesAsync(CompanyDtoParameters companyDtoParameters);
         Task<Company> GetCompanyAsync(Guid companyId);
         Task<IEnumerable<Company>> GetCompaniesAsync(IEnumerable<Guid> companyIds);
 
@@ -18,7 +19,7 @@ namespace Routine.Api.Services
         Task<bool> CompanyExistsAsync(Guid companyId);
 
 
-        Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId);
+        Task<IEnumerable<Employee>> GetEmployeesAsync(Guid companyId, string genderDisplay);
         Task<Employee> GetEmployeeAsync(Guid companyId, Guid employeeId);
         void AddEmployee(Guid companyId, Employee employee);
         void UpdateEmployee(Employee employee);

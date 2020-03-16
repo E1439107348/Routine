@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Routine.Api.DtoParameters;
 using Routine.Api.Entities;
 using Routine.Api.EntitiesDto;
 using Routine.Api.Services;
@@ -32,11 +33,14 @@ namespace Routine.Api.Controllers
         [HttpGet]
         //public async Task<IActionResult> GetCompanies()
         //Task<IActionResult<CompanyDto>>
-        //这样写更能明确【返回类区、属性】    
-        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies()
+        //这样写更能明确【返回类区、属性】  
+
+        //程序会自动的把 companyDtoParameters标记为FromBody 因为它是一个类。所以就不能用 ?name=小明 ；如果想用这种方法，
+        //就用[FromQuery]标记为请求头 
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompanies([FromQuery]CompanyDtoParameters companyDtoParameters)
         {
             //Entity Model
-            var companies = await _companyRepository.GetCompaniesAsync();
+            var companies = await _companyRepository.GetCompaniesAsync(companyDtoParameters);
             //404 NoFound();
 
 
@@ -65,7 +69,7 @@ namespace Routine.Api.Controllers
 
 
         [HttpGet("{companyId}",Name =nameof(GetCompany))]//api/Companies/companyId=>api/Companies/123
-        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(Guid companyId)
+        public async Task<ActionResult<IEnumerable<CompanyDto>>> GetCompany(Guid companyId) 
         {
             //var exist= await _companyRepository.CompanyExistsAsync(companyId);
             //if (!exist)
@@ -78,9 +82,17 @@ namespace Routine.Api.Controllers
                 return NotFound();
             }
 
-            var companiesDtos = _mapper.Map<IEnumerable<CompanyDto>>(company);
-            //404 NoFound();
-            return Ok(companiesDtos);
+            try
+            {
+                var companiesDtos = _mapper.Map<CompanyDto>(company);
+                //404 NoFound();
+                return Ok(companiesDtos);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.ToString();
+                throw;
+            }
         }
 
 
@@ -100,5 +112,40 @@ namespace Routine.Api.Controllers
             return CreatedAtRoute(nameof(GetCompany),new { companyId=entity.Id}, returndto);
 
         }
+
+        #region postman请求格式 CreateCompany
+        //        {
+        //	"name":"Facebook",
+        //	"Introduction":"A Good Company",
+        //	"employees":[
+        //		{
+        //			"employeeNo":"20200106",
+        //			"firstName":"Lee1",
+        //			"lastName":"LeiLie1",
+        //			"gender":1,
+        //			"dataOfBirth":"1989-12-31"
+
+        //        },
+        //			{
+        //			"employeeNo":"20200107",
+        //			"firstName":"Lee2",
+        //			"lastName":"LeiLie2",
+        //			"gender":1,
+        //			"dataOfBirth":"1989-12-31"
+        //		},
+        //			{
+        //			"employeeNo":"20200108",
+        //			"firstName":"Lee3",
+        //			"lastName":"LeiLie3",
+        //			"gender":1,
+        //			"dataOfBirth":"1989-12-31"
+        //		}
+        //		]
+
+
+        //}
+        #endregion
+
+
     }
 }
