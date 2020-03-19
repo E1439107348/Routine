@@ -29,7 +29,6 @@ namespace Routine.Api
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddControllers(); //源码
-           
             // option.ReturnHttpNotAcceptable = true  请求格式和接受模式必须一致。否组返回406
             services.AddControllers(option =>
             {

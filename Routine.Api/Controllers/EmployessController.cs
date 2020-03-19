@@ -70,8 +70,8 @@ namespace Routine.Api.Controllers
                 _companyRepository.AddEmployee(companyId, entity);
                 await _companyRepository.SaveAsync();
 
-                var dtoReturn = _mapper.Map<EmployeeDto>(entity);
-                return CreatedAtRoute(nameof(GetEmployeeForCompany), new { companyId = companyId, employeeId = dtoReturn.Id }, dtoReturn);
+                var dtoReturn = _mapper.Map<EmployeeDto>(entity);  
+                return CreatedAtRoute(nameof(GetEmployeeForCompany), new { companyId = companyId, employeesId = dtoReturn.Id }, dtoReturn);
             }
             catch (Exception ex)
             {
